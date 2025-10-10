@@ -12,7 +12,6 @@ class ProgramCounter extends Module {
 
   val regPC = RegInit(0.U(16.W))
 
-
   when(io.run && !io.stop) {
     when(io.jump) {
       regPC:= io.programCounterJump
