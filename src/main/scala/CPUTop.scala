@@ -29,11 +29,26 @@ class CPUTop extends Module {
 
   //Connecting the modules
   //programCounter.io.run := io.run
+  programCounter.io.jump := alu.io.comparison_result
+  programCounter.io.programCounterJump := programCounter.io.programCounter + controlUnit.io.imm
   //programMemory.io.address := programCounter.io.programCounter
 
-  ////////////////////////////////////////////
-  //Continue here with your connections
-  ////////////////////////////////////////////
+
+  alu.io.op := controlUnit.io
+  alu.io.operand_1 := Mux(controlUnit.io.AorPC, programCounter.io.programCounter, registerFile.io.a)
+  alu.io.operand_2 := Mux(controlUnit.io.BorIMM, controlUnit.io.imm.asSInt.pad(16).asUInt, registerFile.io.b)
+
+  dataMemory.io.address :=  alu.io.result
+  dataMemory.io.writeEnable := controlUnit.io.DATA_writeEnable
+  dataMemory.io.dataWrite := registerFile.io.b
+
+  val muxResult = Mux(controlUnit.io.DATA_readEnable, dataMemory.io.dataRead, alu.io.result)
+
+  registerFile.io.aSel := controlUnit.io.REG_aSel
+  registerFile.io.bSel := controlUnit.io.REG_bSEl
+  registerFile.io.writeSel := controlUnit.io.REG_writeSel
+  registerFile.io.writeEnable := controlUnit.io.REG_writeEnable
+  registerFile.io.writeData := muxResult
 
   //This signals are used by the tester for loading the program to the program memory, do not touch
   programMemory.io.testerAddress := io.testerProgMemAddress
