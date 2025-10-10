@@ -2,7 +2,7 @@ import chisel3._
 import chisel3.util._
 
 object ALUOps {
-  val add :: sub :: mul :: and :: xor :: passA :: passB :: Nil = Enum(7)
+  val add :: sub :: eq :: and :: xor :: passA :: passB :: Nil = Enum(7)
 }
 
 class ALU extends Module {
@@ -11,7 +11,7 @@ class ALU extends Module {
     val operand_2 = Input(UInt(32.W))
     val op = Input(UInt(3.W))
     val result = Output(UInt(32.W))
-    val comparison_result = Output(UInt(1.W))
+    val comparison_result = Output(Bool())
   })
 
   io.result := 0.U
@@ -22,8 +22,8 @@ class ALU extends Module {
       io.result := io.operand_1 + io.operand_2
     }
 
-    is(ALUOps.mul){
-      io.result := io.operand_1 * io.operand_2
+    is(ALUOps.eq){
+      io.comparison_result := (io.operand_1 === io.operand_1)
     }
 
     is(ALUOps.sub){

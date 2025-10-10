@@ -15,10 +15,8 @@ class RegisterFile extends Module {
   // Vector of 8 registers
   val regs = RegInit(VecInit(Seq.fill(16)(0.U(32.W))))
 
-  when(io.writeEnable) {
-    when(io.writeSel < 16.U) {
-      regs(io.writeSel) := io.writeData
-    }
+  when(io.writeEnable && (io.writeSel =/= 0.U) && (io.writeSel < 16.U)) {
+    regs(io.writeSel) := io.writeData
   }
 
   // Read ports
