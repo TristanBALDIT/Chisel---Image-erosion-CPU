@@ -8,6 +8,11 @@ class ControlUnit extends Module {
     val REG_aSel = Output(UInt(4.W))
     val REG_bSEl = Output(UInt(4.W))
     val REG_writeEnable = Output(Bool())
+    val PC_run = Output(Bool())
+    val PC_stop = Output(Bool())
+    val PC_jump = Output(Bool())
+    val DATA_dataRead = Output(Bool())
+    val DATA_dataWrite = Output(Bool())
   })
 
   //Implement this module here
